@@ -25,6 +25,8 @@ from commands.trigger_commands import TriggerCommands
 from commands.waveform_commands import WaveformCommands
 
 class RigolScope:
+    DEFAULT_USB_RESOURCE = 'USB0::0x1AB1::0x04CE::DS1ZA160801111::INSTR'
+    
     def __init__(self):
         self.visa_rm = None
         self.device = None
@@ -55,11 +57,12 @@ class RigolScope:
         self.trigger = TriggerCommands(self)
         self.waveform = WaveformCommands(self)
 
-    def connect_usb(self, resource_name: str):
+    def connect_usb(self, resource_name: str = None):
         """Connect to oscilloscope via USB"""
         try:
             self.visa_rm = visa.ResourceManager()
-            self.device = self.visa_rm.open_resource(resource_name)
+            resource = resource_name or self.DEFAULT_USB_RESOURCE
+            self.device = self.visa_rm.open_resource(resource)
             self.connection_type = 'USB'
             self.connected = True
             return True
