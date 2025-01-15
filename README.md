@@ -53,12 +53,12 @@ This project provides a script to help automate measurements with the Rigol DS11
 
 To connect via USB and acquire waveform data:
 ```sh
-python main.py --connection usb --resource 'USB0::0x1AB1::0x04CE::DS1ZA160801111::INSTR'
+python3 main.py --connection usb --resource 'USB0::0x1AB1::0x04CE::DS1ZA160801111::INSTR'
 ```
 
 To connect via LAN and acquire waveform data:
 ```sh
-python main.py --connection lan --ip 192.168.1.100 --port 5555
+python3 main.py --connection lan --ip 192.168.1.100 --port 5555
 ```
 
 ## License

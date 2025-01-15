@@ -45,12 +45,15 @@ class TriggerCommands:
     # Edge trigger commands
     def set_edge_source(self, source: str):
         """Set edge trigger source"""
+        valid_sources = ['CHANnel1', 'CHANnel2', 'CHANnel3', 'CHANnel4', 'AC', 'EXT']
+        if source.upper() not in [s.upper() for s in valid_sources]:
+            raise ValueError(f'Invalid source. Must be one of {valid_sources}')
         self.device.send_command(f':TRIGger:EDGe:SOURce {source}')
 
     def set_edge_slope(self, slope: str):
         """Set edge trigger slope"""
         valid_slopes = ['POSitive', 'NEGative', 'RFALl']
-        if slope.upper() not in valid_slopes:
+        if slope.upper() not in [s.upper() for s in valid_slopes]:
             raise ValueError(f'Invalid slope. Must be one of {valid_slopes}')
         self.device.send_command(f':TRIGger:EDGe:SLOPe {slope}')
 
@@ -61,6 +64,9 @@ class TriggerCommands:
     # Pulse trigger commands
     def set_pulse_source(self, source: str):
         """Set pulse trigger source"""
+        valid_sources = ['CHANnel1', 'CHANnel2', 'CHANnel3', 'CHANnel4', 'EXT']
+        if source.upper() not in [s.upper() for s in valid_sources]:
+            raise ValueError(f'Invalid source. Must be one of {valid_sources}')
         self.device.send_command(f':TRIGger:PULSe:SOURce {source}')
 
     def set_pulse_when(self, when: str):
@@ -77,6 +83,9 @@ class TriggerCommands:
     # Slope trigger commands
     def set_slope_source(self, source: str):
         """Set slope trigger source"""
+        valid_sources = ['CHANnel1', 'CHANnel2', 'CHANnel3', 'CHANnel4']
+        if source.upper() not in [s.upper() for s in valid_sources]:
+            raise ValueError(f'Invalid source. Must be one of {valid_sources}')
         self.device.send_command(f':TRIGger:SLOPe:SOURce {source}')
 
     def set_slope_when(self, when: str):
@@ -93,6 +102,9 @@ class TriggerCommands:
     # Video trigger commands
     def set_video_source(self, source: str):
         """Set video trigger source"""
+        valid_sources = ['CHANnel1', 'CHANnel2', 'CHANnel3', 'CHANnel4']
+        if source.upper() not in [s.upper() for s in valid_sources]:
+            raise ValueError(f'Invalid source. Must be one of {valid_sources}')
         self.device.send_command(f':TRIGger:VIDeo:SOURce {source}')
 
     def set_video_mode(self, mode: str):
@@ -116,11 +128,17 @@ class TriggerCommands:
 
     def set_pattern_source(self, source: str, level: float):
         """Set pattern trigger source level"""
+        valid_sources = ['CHANnel1', 'CHANnel2', 'CHANnel3', 'CHANnel4']
+        if source.upper() not in [s.upper() for s in valid_sources]:
+            raise ValueError(f'Invalid source. Must be one of {valid_sources}')
         self.device.send_command(f':TRIGger:PATTern:LEVel {source},{level}')
 
     # Duration trigger commands
     def set_duration_source(self, source: str):
         """Set duration trigger source"""
+        valid_sources = ['CHANnel1', 'CHANnel2', 'CHANnel3', 'CHANnel4']
+        if source.upper() not in [s.upper() for s in valid_sources]:
+            raise ValueError(f'Invalid source. Must be one of {valid_sources}')
         self.device.send_command(f':TRIGger:DURATion:SOURce {source}')
 
     def set_duration_type(self, type: str):
@@ -133,36 +151,45 @@ class TriggerCommands:
     # Optional trigger types
     def set_timeout_source(self, source: str):
         """Set timeout trigger source"""
+        valid_sources = ['CHANnel1', 'CHANnel2', 'CHANnel3', 'CHANnel4']
+        if source.upper() not in [s.upper() for s in valid_sources]:
+            raise ValueError(f'Invalid source. Must be one of {valid_sources}')
         self.device.send_command(f':TRIGger:TIMeout:SOURce {source}')
 
     def set_runt_source(self, source: str):
         """Set runt trigger source"""
+        valid_sources = ['CHANnel1', 'CHANnel2', 'CHANnel3', 'CHANnel4']
+        if source.upper() not in [s.upper() for s in valid_sources]:
+            raise ValueError(f'Invalid source. Must be one of {valid_sources}')
         self.device.send_command(f':TRIGger:RUNT:SOURce {source}')
 
     def set_windows_source(self, source: str):
         """Set windows trigger source"""
+        valid_sources = ['CHANnel1', 'CHANnel2', 'CHANnel3', 'CHANnel4']
+        if source.upper() not in [s.upper() for s in valid_sources]:
+            raise ValueError(f'Invalid source. Must be one of {valid_sources}')
         self.device.send_command(f':TRIGger:WINDows:SOURce {source}')
 
     def set_delay_source1(self, source: str):
         """Set delay trigger source 1"""
+        valid_sources = ['CHANnel1', 'CHANnel2', 'CHANnel3', 'CHANnel4']
+        if source.upper() not in [s.upper() for s in valid_sources]:
+            raise ValueError(f'Invalid source. Must be one of {valid_sources}')
         self.device.send_command(f':TRIGger:DELay:SA {source}')
 
     def set_shold_source1(self, source: str):
         """Set setup/hold trigger source 1"""
+        valid_sources = ['CHANnel1', 'CHANnel2', 'CHANnel3', 'CHANnel4']
+        if source.upper() not in [s.upper() for s in valid_sources]:
+            raise ValueError(f'Invalid source. Must be one of {valid_sources}')
         self.device.send_command(f':TRIGger:SHOLd:DSrc {source}')
 
     def set_nedge_source(self, source: str):
         """Set nth edge trigger source"""
+        valid_sources = ['CHANnel1', 'CHANnel2', 'CHANnel3', 'CHANnel4']
+        if source.upper() not in [s.upper() for s in valid_sources]:
+            raise ValueError(f'Invalid source. Must be one of {valid_sources}')
         self.device.send_command(f':TRIGger:NEDGe:SOURce {source}')
 
     def set_rs232_source(self, source: str):
         """Set RS232 trigger source"""
-        self.device.send_command(f':TRIGger:RS232:SOURce {source}')
-
-    def set_iic_source(self, source: str):
-        """Set IIC trigger source"""
-        self.device.send_command(f':TRIGger:IIC:SCL {source}')
-
-    def set_spi_source(self, source: str):
-        """Set SPI trigger source"""
-        self.device.send_command(f':TRIGger:SPI:CLK {source}')

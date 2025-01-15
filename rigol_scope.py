@@ -1,4 +1,4 @@
-"""Main Rigol oscilloscope interface"""
+# Main Rigol oscilloscope interface
 
 import socket
 import pyvisa as visa
@@ -25,8 +25,11 @@ from commands.trigger_commands import TriggerCommands
 from commands.waveform_commands import WaveformCommands
 
 class RigolScope:
-    DEFAULT_USB_RESOURCE = 'USB0::0x1AB1::0x04CE::DS1ZA160801111::INSTR'
-    
+    DEFAULT_USB_RESOURCE = 'ASRL/dev/ttyUSB0::INSTR'
+    DEFAULT_IP = '192.168.0.5'  # Default IP for LAN connection
+    DEFAULT_PORT = 5555  # Default port for LAN connection (set to match VISA resource)
+    VISA_RESOURCE = 'TCPIP0::192.168.0.5::INSTR'  # Correct VISA resource for the scope
+
     def __init__(self):
         self.visa_rm = None
         self.device = None
@@ -58,11 +61,12 @@ class RigolScope:
         self.waveform = WaveformCommands(self)
 
     def connect_usb(self, resource_name: str = None):
-        """Connect to oscilloscope via USB"""
+        """Connect to oscilloscope via USB/serial"""
         try:
-            self.visa_rm = visa.ResourceManager()
+            self.visa_rm = visa.ResourceManager('@py')
             resource = resource_name or self.DEFAULT_USB_RESOURCE
             self.device = self.visa_rm.open_resource(resource)
+            self.device.timeout = 5000  # Increase timeout to 5 seconds
             self.connection_type = 'USB'
             self.connected = True
             return True
@@ -70,11 +74,14 @@ class RigolScope:
             print(f"Failed to connect via USB: {str(e)}")
             return False
 
-    def connect_lan(self, ip_address: str, port: int = 5555):
+    def connect_lan(self, ip_address: str = None, port: int = None):
         """Connect to oscilloscope via LAN"""
+        ip_address = ip_address or self.DEFAULT_IP
+        port = port or self.DEFAULT_PORT
         try:
-            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.socket.connect((ip_address, port))
+            self.visa_rm = visa.ResourceManager('@py')
+            self.device = self.visa_rm.open_resource(self.VISA_RESOURCE)
+            self.device.timeout = 5000  # Set timeout for LAN communication
             self.connection_type = 'LAN'
             self.connected = True
             return True
@@ -88,8 +95,9 @@ class RigolScope:
             if self.connection_type == 'USB' and self.device:
                 self.device.close()
                 self.visa_rm.close()
-            elif self.connection_type == 'LAN' and self.socket:
-                self.socket.close()
+            elif self.connection_type == 'LAN' and self.device:
+                self.device.close()
+                self.visa_rm.close()
             
             self.device = None
             self.visa_rm = None
@@ -107,10 +115,8 @@ class RigolScope:
             raise ConnectionError("Not connected to oscilloscope")
         
         try:
-            if self.connection_type == 'USB':
+            if self.connection_type in ['USB', 'LAN']:
                 self.device.write(command)
-            elif self.connection_type == 'LAN':
-                self.socket.send(f"{command}\n".encode())
             return True
         except Exception as e:
             print(f"Failed to send command: {str(e)}")
@@ -122,11 +128,12 @@ class RigolScope:
             raise ConnectionError("Not connected to oscilloscope")
         
         try:
-            if self.connection_type == 'USB':
+            if self.connection_type in ['USB', 'LAN']:
                 return self.device.query(command).strip()
-            elif self.connection_type == 'LAN':
-                self.socket.send(f"{command}\n".encode())
-                return self.socket.recv(4096).decode().strip()
         except Exception as e:
             print(f"Failed to query: {str(e)}")
             return ""
+
+    def get_sources(self):
+        """Get available sources for waveform"""
+        return ['CHANnel1', 'CHANnel2', 'CHANnel3', 'CHANnel4', 'MATH', 'FFT', 'LA']

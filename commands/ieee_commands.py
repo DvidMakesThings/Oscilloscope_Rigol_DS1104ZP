@@ -18,7 +18,11 @@ class IEEECommands:
 
     def get_identification(self):
         """Get device identification"""
-        return self.device.query('*IDN?')
+        try:
+            return self.device.query('*IDN?')
+        except Exception as e:
+            print(f"Failed to get identification: {str(e)}")
+            return ""
 
     def operation_complete(self):
         """Set operation complete flag"""
